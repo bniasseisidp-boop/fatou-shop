@@ -11,8 +11,11 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 27px 17px 18px;
   color: #f8f6f2;
   background: #24221f;
@@ -662,9 +665,7 @@
   }
 
   .superadmin-sidebar {
-    position: sticky;
-    z-index: 20;
-    top: 0;
+    position: static;
     height: auto;
     padding: 10px 12px;
   }
@@ -681,9 +682,13 @@
     font-size: 8px;
   }
 
-  .superadmin-safety,
-  .superadmin-account {
+  .superadmin-safety {
     display: none;
+  }
+
+  .superadmin-account {
+    margin-top: 8px;
+    padding: 8px 2px 0;
   }
 
   .superadmin-navigation {

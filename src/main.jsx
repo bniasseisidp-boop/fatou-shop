@@ -12,6 +12,9 @@ import "./map.css";
 import "./driver.css";
 import "./pwa.css";
 
+const isPortalRoute = ["/admin", "/superadmin", "/client", "/driver"]
+  .some((route) => window.location.pathname.startsWith(route));
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/service-worker.js")
@@ -32,6 +35,6 @@ createRoot(document.getElementById("root")).render(
             ? <DriverPortal />
             : <App />}
     </Suspense>
-    <InstallAppButton />
+    {!isPortalRoute && <InstallAppButton />}
   </React.StrictMode>,
 );

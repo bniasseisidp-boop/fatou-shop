@@ -9,8 +9,11 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 27px 17px 18px;
   border-right: 1px solid #eee4e9;
   background: #fff;
@@ -274,14 +277,19 @@
 }
 @media (max-width: 700px) {
   .admin-shell { grid-template-columns: 1fr; }
-  .admin-sidebar { position: sticky; z-index: 20; top: 0; height: auto; padding: 11px 13px 9px; border-right: 0; border-bottom: 1px solid #eee4e9; }
+  .admin-sidebar { position: static; height: auto; overflow: visible; padding: 11px 13px 9px; border-right: 0; border-bottom: 1px solid #eee4e9; }
   .admin-brand { font-size: 17px; }
   .admin-brand > small { width: auto; margin: 0 0 0 10px; font-size: 7px; }
-  .admin-sidebar-label, .admin-sidebar-bottom { display: none; }
+  .admin-sidebar-label { display: none; }
   .admin-navigation { display: flex; gap: 4px; margin-top: 10px; overflow-x: auto; }
   .admin-navigation > button { min-width: max-content; min-height: 35px; gap: 6px; padding: 0 9px; font-size: 9px; }
   .admin-navigation > button > svg { width: 15px; }
   .admin-nav-dot { display: none; }
+  .admin-sidebar-bottom { grid-template-columns: 1fr 1fr; gap: 4px 8px; margin-top: 9px; padding-top: 8px; border-top: 1px solid #f0e8ec; }
+  .admin-superadmin-link, .admin-user { grid-column: 1 / -1; }
+  .admin-user { padding: 4px 3px; border-top: 0; }
+  .admin-logout, .admin-storefront-link { min-height: 35px; padding: 0 5px; border-radius: 5px; background: #f8f6f7; }
+  .admin-logout { color: #a63368; }
   .admin-topbar { min-height: 105px; padding: 17px 16px; }
   .admin-topbar h1 { font-size: 25px; }
   .admin-topbar p { max-width: 240px; line-height: 1.5; }
