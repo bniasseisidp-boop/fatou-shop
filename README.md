@@ -7,7 +7,7 @@ Vitrine React/Vite et API Laravel pour le catalogue, les commandes, les paiement
 Prérequis : PHP 8.4.1 ou plus récent avec `openssl`, `mbstring`, `fileinfo`, `pdo_mysql` et `curl`, Composer, Node.js, ainsi que MySQL/MariaDB.
 
 1. Dans `backend/`, copier `.env.example` vers `.env`, renseigner l’accès à une base de données dédiée, puis générer la clé avec `php artisan key:generate`.
-2. Définir `ADMIN_EMAIL` et `ADMIN_PASSWORD` dans `backend/.env`. L’adresse doit être valide et le mot de passe doit comporter au moins 14 caractères. Garder ces valeurs privées et ne jamais publier `.env`.
+2. Pour créer un compte admin initial automatiquement, définir `ADMIN_EMAIL` et `ADMIN_PASSWORD` dans `backend/.env` ; l’adresse doit être valide et le mot de passe doit comporter au moins 14 caractères. Ces deux variables peuvent rester vides si le superadmin crée les comptes admin depuis son portail. Garder les identifiants privés et ne jamais publier `.env`.
 3. Depuis `backend/`, préparer la base et les données de démonstration :
 
    ```powershell
@@ -146,7 +146,7 @@ sudo chmod 640 /var/www/fatou-shop/shared/backend.env
 sudoedit /var/www/fatou-shop/shared/backend.env
 ```
 
-Dans ce fichier, renseigner `APP_ENV=production`, `APP_URL=https://fatoushop.multibrain.cloud`, `SESSION_SECURE_COOKIE=true`, laisser `APP_DEBUG=false`, définir `APP_KEY` avec une clé générée par `php -r "echo 'base64:'.base64_encode(random_bytes(32)), PHP_EOL;"`, et compléter `DB_PASSWORD`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `SUPERADMIN_EMAIL` et `SUPERADMIN_PASSWORD`. Les deux mots de passe administrateur doivent être uniques et comporter au moins 14 caractères. Garder ce fichier privé ; ne jamais le copier dans GitHub.
+Dans ce fichier, renseigner `APP_ENV=production`, `APP_URL=https://fatoushop.multibrain.cloud`, `SESSION_SECURE_COOKIE=true`, laisser `APP_DEBUG=false`, définir `APP_KEY` avec une clé générée par `php -r "echo 'base64:'.base64_encode(random_bytes(32)), PHP_EOL;"`, et compléter `DB_PASSWORD`, `SUPERADMIN_EMAIL` et `SUPERADMIN_PASSWORD`. Les identifiants `ADMIN_EMAIL` et `ADMIN_PASSWORD` sont facultatifs : laisse-les vides pour créer les comptes admin depuis le portail superadmin. Les mots de passe renseignés doivent être uniques et comporter au moins 14 caractères. Garder ce fichier privé ; ne jamais le copier dans GitHub.
 
 Émettre le certificat Let's Encrypt depuis le serveur, en vérifiant que le DNS et les ports 80/443 sont accessibles :
 

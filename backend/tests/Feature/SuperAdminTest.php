@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\InitialAdminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -48,6 +49,41 @@ class SuperAdminTest extends TestCase
             'email' => 'equipe@example.test',
             'password' => 'temporary-secret-123',
         ])->assertUnprocessable();
+    }
+
+    public function test_initial_admin_seeder_can_be_skipped_without_credentials(): void
+    {
+        $previousValues = [];
+
+        foreach (['ADMIN_EMAIL', 'ADMIN_PASSWORD'] as $name) {
+            $previousValues[$name] = [
+                'environment' => getenv($name),
+                'server' => $_SERVER[$name] ?? null,
+                'server_exists' => array_key_exists($name, $_SERVER),
+                'env' => $_ENV[$name] ?? null,
+                'env_exists' => array_key_exists($name, $_ENV),
+            ];
+            putenv($name);
+            unset($_SERVER[$name], $_ENV[$name]);
+        }
+
+        try {
+            app(InitialAdminSeeder::class)->run();
+        } finally {
+            foreach ($previousValues as $name => $values) {
+                if ($values['environment'] !== false) {
+                    putenv($name.'='.$values['environment']);
+                }
+                if ($values['server_exists']) {
+                    $_SERVER[$name] = $values['server'];
+                }
+                if ($values['env_exists']) {
+                    $_ENV[$name] = $values['env'];
+                }
+            }
+        }
+
+        $this->assertDatabaseCount('users', 0);
     }
 
     public function test_regular_admins_cannot_manage_admin_accounts_or_read_audit_logs(): void
