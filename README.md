@@ -4,7 +4,7 @@ Vitrine React/Vite et API Laravel pour le catalogue, les commandes, les paiement
 
 ## Démarrage local
 
-Prérequis : PHP 8.3 ou plus récent avec `openssl`, `mbstring`, `fileinfo`, `pdo_mysql` et `curl`, Composer, Node.js, ainsi que MySQL/MariaDB.
+Prérequis : PHP 8.4.1 ou plus récent avec `openssl`, `mbstring`, `fileinfo`, `pdo_mysql` et `curl`, Composer, Node.js, ainsi que MySQL/MariaDB.
 
 1. Dans `backend/`, copier `.env.example` vers `.env`, renseigner l’accès à une base de données dédiée, puis générer la clé avec `php artisan key:generate`.
 2. Définir `ADMIN_EMAIL` et `ADMIN_PASSWORD` dans `backend/.env`. L’adresse doit être valide et le mot de passe doit comporter au moins 14 caractères. Garder ces valeurs privées et ne jamais publier `.env`.
@@ -58,7 +58,7 @@ Wave et Orange Money ne sont pas débités par le site : le client peut signaler
 
 Le workflow GitHub Actions teste l’API, compile la vitrine, puis transfère une version au VPS par SSH. Chaque version est conservée séparément ; les migrations et le contrôle de santé sont exécutés avant de garder la nouvelle version. Le premier déploiement initialise les données et les comptes une seule fois. Les déploiements suivants ne réexécutent pas les seeders et ne réinitialisent donc pas les mots de passe.
 
-Le serveur ciblé est Ubuntu 24.04, Nginx, PHP 8.3-FPM et MariaDB. Le DNS A de `fatoushop.multibrain.cloud` doit pointer vers `72.62.239.108`. Ouvrir les ports TCP 22, 80 et 443 dans le pare-feu du VPS et, s’il existe, dans celui de l’hébergeur.
+Le serveur ciblé est Ubuntu 24.04, Nginx, PHP 8.5-FPM et MariaDB. Le DNS A de `fatoushop.multibrain.cloud` doit pointer vers `72.62.239.108`. Ouvrir les ports TCP 22, 80 et 443 dans le pare-feu du VPS et, s’il existe, dans celui de l’hébergeur.
 
 ### 1. Préparer Ubuntu
 
@@ -66,10 +66,13 @@ Se connecter au VPS comme utilisateur autorisé à utiliser `sudo`, puis install
 
 ```bash
 sudo apt update
-sudo apt install -y nginx mariadb-server php8.3-cli php8.3-fpm php8.3-mysql \
-  php8.3-mbstring php8.3-xml php8.3-curl php8.3-zip php8.3-bcmath \
-  php8.3-intl php8.3-gd unzip curl certbot
-sudo systemctl enable --now nginx php8.3-fpm mariadb
+sudo apt install -y software-properties-common
+sudo add-apt-repository -y ppa:ondrej/php
+sudo apt update
+sudo apt install -y nginx mariadb-server php8.5-cli php8.5-fpm php8.5-mysql \
+  php8.5-mbstring php8.5-xml php8.5-curl php8.5-zip php8.5-bcmath \
+  php8.5-intl php8.5-gd unzip curl certbot
+sudo systemctl enable --now nginx php8.5-fpm mariadb
 ```
 
 Créer le compte de déploiement et les dossiers. Ne pas utiliser `root` comme utilisateur SSH de GitHub Actions :
