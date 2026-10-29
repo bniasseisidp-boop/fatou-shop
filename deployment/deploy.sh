@@ -60,7 +60,7 @@ mkdir -p \
 ln -s "$SHARED_DIR/backend.env" "$RELEASE_DIR/backend/.env"
 ln -s "$SHARED_DIR/backend-storage" "$RELEASE_DIR/backend/storage"
 mkdir -p "$RELEASE_DIR/backend/bootstrap/cache"
-chmod -R ug+rwX "$RELEASE_DIR/backend/bootstrap/cache" "$SHARED_DIR/backend-storage"
+chmod -R ug+rwX "$RELEASE_DIR/backend/bootstrap/cache"
 
 cd "$RELEASE_DIR/backend"
 php artisan optimize:clear
