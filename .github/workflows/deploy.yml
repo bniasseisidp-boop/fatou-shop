@@ -48,6 +48,16 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
+      - name: Prepare Laravel storage paths
+        run: |
+          mkdir -p backend/storage/app/private \
+            backend/storage/app/public \
+            backend/storage/framework/cache/data \
+            backend/storage/framework/sessions \
+            backend/storage/framework/testing \
+            backend/storage/framework/views \
+            backend/storage/logs
+
       - name: Run backend tests
         working-directory: backend
         run: php artisan test
