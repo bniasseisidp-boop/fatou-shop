@@ -1,0 +1,131 @@
+name: Test and deploy Fatou Shop
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fatou-shop-production
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Test and build
+    runs-on: ubuntu-24.04
+    env:
+      APP_ENV: testing
+      APP_KEY: base64:MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODkwYWJjZGVm
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      SESSION_DRIVER: array
+      CACHE_STORE: array
+      QUEUE_CONNECTION: sync
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, fileinfo, pdo_sqlite, sqlite3, openssl
+          coverage: none
+          tools: composer:v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install PHP dependencies
+        run: composer install --working-dir=backend --no-interaction --prefer-dist --no-progress
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: backend
+        run: php artisan test
+
+      - name: Verify Laravel route cache
+        working-directory: backend
+        run: |
+          php artisan route:cache
+          php artisan route:clear
+
+      - name: Build storefront
+        run: npm run build
+
+      - name: Install production PHP dependencies
+        run: composer install --working-dir=backend --no-dev --classmap-authoritative --no-interaction --prefer-dist --no-progress
+
+      - name: Package release
+        run: |
+          mkdir -p "$RUNNER_TEMP/fatou-release"
+          tar -czf "$RUNNER_TEMP/fatou-release/release.tar.gz" \
+            --exclude=.git \
+            --exclude=node_modules \
+            --exclude=backend/node_modules \
+            --exclude=backend/.env \
+            --exclude=backend/storage \
+            --exclude=backend/tests \
+            --exclude=backend/.phpunit.cache \
+            --exclude=backend/.phpunit.result.cache \
+            --exclude=backend/bootstrap/cache/*.php \
+            .
+
+      - name: Upload release bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: fatou-shop-release
+          path: ${{ runner.temp }}/fatou-release/release.tar.gz
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    name: Deploy to VPS
+    needs: verify
+    if: vars.FATOU_SHOP_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    environment: production
+    steps:
+      - name: Check out deployment script
+        uses: actions/checkout@v4
+
+      - name: Download release bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: fatou-shop-release
+          path: release
+
+      - name: Configure SSH
+        env:
+          VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$VPS_SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
+
+      - name: Transfer release bundle
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          RELEASE_SHA: ${{ github.sha }}
+        run: |
+          ssh "$VPS_USER@$VPS_HOST" "mkdir -p /var/www/fatou-shop/incoming"
+          scp release/release.tar.gz "$VPS_USER@$VPS_HOST:/var/www/fatou-shop/incoming/$RELEASE_SHA.tar.gz"
+
+      - name: Activate release
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          RELEASE_SHA: ${{ github.sha }}
+        run: |
+          ssh "$VPS_USER@$VPS_HOST" "APP_DIR=/var/www/fatou-shop RELEASE_SHA=$RELEASE_SHA bash -s" < deployment/deploy.sh

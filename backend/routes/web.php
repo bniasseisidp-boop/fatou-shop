@@ -108,8 +108,8 @@ Route::prefix('api')->name('api.')->group(function (): void {
     });
 });
 
-Route::get('/', fn () => view('welcome'));
-Route::get('/admin', fn () => view('welcome'));
-Route::get('/superadmin', fn () => view('welcome'));
-Route::get('/client', fn () => view('welcome'));
-Route::get('/driver', fn () => view('welcome'));
+Route::view('/', 'welcome');
+Route::view('/admin', 'welcome');
+Route::view('/superadmin', 'welcome');
+Route::view('/client', 'welcome');
+Route::view('/driver', 'welcome');
