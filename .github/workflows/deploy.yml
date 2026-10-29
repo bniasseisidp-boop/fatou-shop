@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       APP_ENV: testing
-      APP_KEY: base64:MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODkwYWJjZGVm
+      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       DB_CONNECTION: sqlite
       DB_DATABASE: ":memory:"
       SESSION_DRIVER: array
