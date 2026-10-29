@@ -58,24 +58,34 @@ Wave et Orange Money ne sont pas débités par le site : le client peut signaler
 
 Le workflow GitHub Actions teste l’API, compile la vitrine, puis transfère une version au VPS par SSH. Chaque version est conservée séparément ; les migrations et le contrôle de santé sont exécutés avant de garder la nouvelle version. Le premier déploiement initialise les données et les comptes une seule fois. Les déploiements suivants ne réexécutent pas les seeders et ne réinitialisent donc pas les mots de passe.
 
-Le serveur ciblé est Ubuntu 24.04, Nginx, PHP 8.5-FPM et MariaDB. Le DNS A de `fatoushop.multibrain.cloud` doit pointer vers `72.62.239.108`. Ouvrir les ports TCP 22, 80 et 443 dans le pare-feu du VPS et, s’il existe, dans celui de l’hébergeur.
+Le VPS vérifié tourne déjà sous Ubuntu 24.04 avec Nginx, MySQL, Docker et PHP-FPM 8.2, 8.3 et 8.4. Fatou Shop utilise PHP 8.4-FPM ; le workflow de compilation peut rester sous PHP 8.5. Le DNS A de `fatoushop.multibrain.cloud` doit pointer vers `72.62.239.108`. N’installez pas de dépôt PHP, ne changez pas le pare-feu et ne redémarrez pas MySQL, Docker ou les autres versions PHP pour ce déploiement.
 
-### 1. Préparer Ubuntu
+### 1. Vérifier les prérequis sans modifier les services
 
-Se connecter au VPS comme utilisateur autorisé à utiliser `sudo`, puis installer les composants :
+Avant toute installation, vérifier la version et les extensions du PHP déjà installé, ainsi que l’état des dossiers, certificat et hôtes Nginx. Ces commandes sont en lecture seule :
 
 ```bash
-sudo apt update
-sudo apt install -y software-properties-common
-sudo add-apt-repository -y ppa:ondrej/php
-sudo apt update
-sudo apt install -y nginx mariadb-server php8.5-cli php8.5-fpm php8.5-mysql \
-  php8.5-mbstring php8.5-xml php8.5-curl php8.5-zip php8.5-bcmath \
-  php8.5-intl php8.5-gd unzip curl certbot
-sudo systemctl enable --now nginx php8.5-fpm mariadb
+php8.4 -v
+php8.4 -m
+test -S /run/php/php8.4-fpm.sock && echo "PHP 8.4 FPM est disponible"
+command -v nginx
+command -v certbot
+sudo certbot certificates
+sudo test ! -e /var/www/fatou-shop && echo "/var/www/fatou-shop est libre"
+getent passwd deploy || true
+sudo test ! -e /etc/nginx/snippets/fatoushop-locations.conf && echo "Snippet Fatou Shop absent"
+sudo test ! -e /etc/nginx/sites-available/fatoushop.conf && echo "Vhost Fatou Shop absent"
+sudo test ! -e /etc/nginx/sites-enabled/fatoushop.conf && echo "Activation Fatou Shop absente"
+sudo nginx -T 2>/dev/null | grep -F "fatoushop.multibrain.cloud" || true
 ```
 
-Créer le compte de déploiement et les dossiers. Ne pas utiliser `root` comme utilisateur SSH de GitHub Actions :
+Le PHP CLI doit être en version 8.4.1 ou plus et inclure au minimum `ctype`, `curl`, `fileinfo`, `mbstring`, `openssl`, `PDO`, `pdo_mysql`, `tokenizer` et `xml`. Vérifier que le socket PHP-FPM existe. Si PHP ou une extension manque, arrêter et examiner le plan APT avant toute installation : une installation de paquet peut redémarrer le service PHP-FPM concerné. N’ajouter aucun dépôt APT.
+
+Le rapport actuel montre que Nginx dessert déjà plusieurs sites et qu’il existe des avertissements de noms de serveur dupliqués, malgré un `nginx -t` réussi. Ne supprimez aucun fichier de `sites-enabled`, ne remplacez aucun hôte existant et ne rechargez pas Nginx avant d’avoir confirmé que le nom Fatou Shop n’est pas déjà configuré. Le sous-domaine doit avoir son propre bloc `server_name`.
+
+### 2. Créer uniquement les ressources Fatou Shop
+
+Créer un utilisateur SSH dédié (ne pas utiliser `root` pour GitHub Actions) et uniquement le nouveau dossier `/var/www/fatou-shop`. Ces commandes ne modifient pas les autres dossiers, bases ou applications ; ne les lancer qu’après avoir vérifié que l’utilisateur `deploy` et ce chemin n’existent pas déjà :
 
 ```bash
 sudo adduser --disabled-password --gecos "" deploy
@@ -90,10 +100,12 @@ sudo install -d -o deploy -g www-data -m 2750 \
   /var/www/fatou-shop/acme/.well-known/acme-challenge
 ```
 
-Créer la base dans MariaDB (remplacer le mot de passe d’exemple par une valeur aléatoire forte) :
+Avant de créer la base, vérifier qu’aucune base `fatou_shop` ni aucun compte MySQL `fatou_shop` n’existe. N’exécuter `CREATE DATABASE`/`CREATE USER` que s’ils sont absents ; ne jamais supprimer ou remplacer une base existante. MySQL reste lié à `127.0.0.1:3306` et n’a pas besoin d’être redémarré.
+
+Si les deux sont absents, créer la base avec un compte dédié (remplacer le mot de passe d’exemple par une valeur aléatoire forte) :
 
 ```bash
-sudo mariadb
+sudo mysql
 ```
 
 ```sql
@@ -103,34 +115,32 @@ GRANT ALL PRIVILEGES ON fatou_shop.* TO 'fatou_shop'@'127.0.0.1';
 EXIT;
 ```
 
-Installer la configuration HTTP et le fragment Nginx depuis la branche `main` :
+Après avoir vérifié que `/etc/nginx/snippets/fatoushop-locations.conf` et `/etc/nginx/sites-available/fatoushop.conf` n’existent pas déjà, installer les fichiers Nginx Fatou Shop sans toucher aux sites existants :
 
 ```bash
 sudo curl -fsSL https://raw.githubusercontent.com/bniasseisidp-boop/fatou-shop/main/deployment/nginx/fatoushop-locations.conf \
   -o /etc/nginx/snippets/fatoushop-locations.conf
 sudo curl -fsSL https://raw.githubusercontent.com/bniasseisidp-boop/fatou-shop/main/deployment/nginx/fatoushop.conf \
   -o /etc/nginx/sites-available/fatoushop.conf
-sudo ln -sfn /etc/nginx/sites-available/fatoushop.conf /etc/nginx/sites-enabled/fatoushop.conf
+sudo ln -s /etc/nginx/sites-available/fatoushop.conf /etc/nginx/sites-enabled/fatoushop.conf
 sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-Si `ufw` est activé, autoriser SSH avant de l’activer et ouvrir HTTP/HTTPS :
+Ne modifiez pas UFW ni le pare-feu de l’hébergeur : les ports 80 et 443 écoutent déjà. Si le sous-domaine n’est pas accessible depuis Internet, vérifier d’abord les règles existantes avec l’hébergeur.
 
-```bash
-sudo ufw allow OpenSSH
-sudo ufw allow 'Nginx Full'
-sudo ufw status
-```
-
-### 2. Configurer l’application et HTTPS
+### 3. Configurer l’application et HTTPS
 
 Créer le fichier d’environnement de production à partir du modèle, puis l’éditer **uniquement sur le VPS** :
 
 ```bash
-sudo -u deploy curl -fsSL \
-  https://raw.githubusercontent.com/bniasseisidp-boop/fatou-shop/main/backend/.env.example \
-  -o /var/www/fatou-shop/shared/backend.env
+if sudo test ! -e /var/www/fatou-shop/shared/backend.env; then
+  sudo -u deploy curl -fsSL \
+    https://raw.githubusercontent.com/bniasseisidp-boop/fatou-shop/main/backend/.env.example \
+    -o /var/www/fatou-shop/shared/backend.env
+else
+  echo "backend.env existe déjà : il est conservé, ne pas le remplacer."
+fi
 sudo chown deploy:www-data /var/www/fatou-shop/shared/backend.env
 sudo chmod 640 /var/www/fatou-shop/shared/backend.env
 sudoedit /var/www/fatou-shop/shared/backend.env
@@ -152,7 +162,7 @@ sudo certbot renew --dry-run
 
 La configuration HTTPS conserve le chemin HTTP-01 pour renouveler le certificat. N’activer le déploiement que lorsque `sudo nginx -t` et le test de renouvellement réussissent.
 
-### 3. Autoriser les déploiements GitHub
+### 4. Autoriser les déploiements GitHub
 
 Sur votre ordinateur Windows, créer une clé dédiée à GitHub Actions et copier la clé publique sur le compte `deploy` du VPS. Ne partagez jamais la clé privée :
 
