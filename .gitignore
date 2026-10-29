@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.local
+
+backend/vendor/
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/storage/*
+!backend/storage/.gitignore
+backend/bootstrap/cache/*
+!backend/bootstrap/cache/.gitignore
+backend/public/storage
+backend/public/build
+backend/database/*.sqlite

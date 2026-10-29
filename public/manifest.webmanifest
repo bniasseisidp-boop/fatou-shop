@@ -1,0 +1,67 @@
+{
+  "id": "/",
+  "name": "Fatou Shop — Boutique et espaces de suivi",
+  "short_name": "Fatou Shop",
+  "description": "La boutique Fatou Shop et ses espaces admin, client et livreur.",
+  "lang": "fr-SN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f5f2eb",
+  "theme_color": "#b73b2d",
+  "categories": ["shopping", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/fatou-shop-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/fatou-shop-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/fatou-shop-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Boutique",
+      "short_name": "Boutique",
+      "url": "/",
+      "icons": [{ "src": "/icons/fatou-shop-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Administration",
+      "short_name": "Admin",
+      "url": "/admin",
+      "icons": [{ "src": "/icons/fatou-shop-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Superadministration",
+      "short_name": "Superadmin",
+      "url": "/superadmin",
+      "icons": [{ "src": "/icons/fatou-shop-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Espace client",
+      "short_name": "Client",
+      "url": "/client",
+      "icons": [{ "src": "/icons/fatou-shop-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Espace livreur",
+      "short_name": "Livreur",
+      "url": "/driver",
+      "icons": [{ "src": "/icons/fatou-shop-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

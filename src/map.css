@@ -1,0 +1,9 @@
+.delivery-map { position: relative; z-index: 0; width: 100%; height: 280px; overflow: hidden; border: 1px solid #e8d9e1; border-radius: 9px; background: #f3efeb; }
+.delivery-map .leaflet-container { width: 100%; height: 100%; font-family: var(--sans); }
+.delivery-map .leaflet-control-attribution { font-size: 8px; }
+.delivery-map-prompt { position: absolute; z-index: 500; right: 9px; bottom: 24px; left: 9px; width: fit-content; max-width: calc(100% - 18px); padding: 7px 9px; border-radius: 5px; color: #473b43; background: #ffffffed; box-shadow: 0 2px 8px #0002; font-size: 10px; pointer-events: none; }
+.delivery-map-pin { display: grid; place-items: center; border: 2px solid white; border-radius: 50% 50% 50% 0; box-shadow: 0 2px 8px #24172255; transform: rotate(-45deg); }
+.delivery-map-pin span { display: grid; width: 100%; height: 100%; place-items: center; border-radius: 50%; color: white; font: 700 13px var(--sans); transform: rotate(45deg); }
+.store-pin { background: #272021; }
+.customer-pin { background: #c13774; }
+.driver-pin { background: #1677c8; }

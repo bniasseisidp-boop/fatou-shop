@@ -1,0 +1,749 @@
+.superadmin-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 252px minmax(0, 1fr);
+  color: #24221f;
+  background: #f5f2eb;
+  font-family: "DM Sans", sans-serif;
+}
+
+.superadmin-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 27px 17px 18px;
+  color: #f8f6f2;
+  background: #24221f;
+}
+
+.superadmin-brand {
+  display: grid;
+  gap: 7px;
+  padding: 2px 9px 22px;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.superadmin-brand span {
+  color: #e58b80;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .15em;
+}
+
+.superadmin-safety {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 25px;
+  padding: 11px 10px;
+  border: 1px solid #ffffff20;
+  border-radius: 7px;
+  color: #f0c3bd;
+  font-size: 11px;
+}
+
+.superadmin-navigation {
+  display: grid;
+  gap: 5px;
+}
+
+.superadmin-navigation button {
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  color: #c4c0b9;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: 500 11px "DM Sans", sans-serif;
+}
+
+.superadmin-navigation button.active,
+.superadmin-navigation button:hover {
+  color: white;
+  background: #ffffff12;
+}
+
+.superadmin-navigation button.active {
+  box-shadow: inset 2px 0 #c64a3b;
+}
+
+.superadmin-store-admin {
+  min-height: 39px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding: 0 10px;
+  border: 1px solid #ffffff24;
+  border-radius: 6px;
+  color: #f0c3bd;
+  font-size: 10px;
+}
+
+.superadmin-store-admin:hover {
+  color: #fff;
+  background: #ffffff10;
+}
+
+.superadmin-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 16px 3px 0;
+  border-top: 1px solid #ffffff20;
+}
+
+.superadmin-account-avatar,
+.superadmin-login-mark {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #b73b2d;
+}
+
+.superadmin-account-avatar {
+  width: 35px;
+  height: 35px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.superadmin-account-name {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  margin-right: auto;
+}
+
+.superadmin-account-name strong {
+  overflow: hidden;
+  color: #fff;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.superadmin-account-name span {
+  color: #aaa59c;
+  font-size: 9px;
+}
+
+.superadmin-account > button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  color: #e2d9d4;
+  background: transparent;
+  cursor: pointer;
+}
+
+.superadmin-main {
+  min-width: 0;
+  padding: 31px clamp(20px, 4vw, 58px) 36px;
+}
+
+.superadmin-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 20px;
+  margin: 0 0 26px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #ded9cf;
+}
+
+.superadmin-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #a63c30;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.superadmin-topbar h1 {
+  margin: 10px 0 5px;
+  font: 500 clamp(29px, 4vw, 42px)/1.08 "Playfair Display", Georgia, serif;
+  letter-spacing: -.04em;
+}
+
+.superadmin-topbar p,
+.superadmin-panel-heading p {
+  margin: 0;
+  color: #817c74;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.superadmin-top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.superadmin-refresh,
+.superadmin-store-link {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 11px;
+  border: 1px solid #ded9cf;
+  border-radius: 5px;
+  color: #504b44;
+  background: #fffdfa;
+  cursor: pointer;
+  font: 500 10px "DM Sans", sans-serif;
+}
+
+.superadmin-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+  margin-bottom: 17px;
+}
+
+.superadmin-metric,
+.superadmin-panel {
+  min-width: 0;
+  border: 1px solid #e4dfd6;
+  border-radius: 8px;
+  background: #fffdfa;
+}
+
+.superadmin-metric {
+  min-height: 108px;
+  display: grid;
+  grid-template-columns: 31px 1fr;
+  align-content: center;
+  align-items: center;
+  column-gap: 9px;
+  padding: 15px;
+}
+
+.superadmin-metric-icon {
+  grid-row: span 2;
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  border-radius: 7px;
+  color: #ae4235;
+  background: #f8eae6;
+}
+
+.superadmin-metric-label {
+  color: #817c74;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.superadmin-metric strong {
+  margin-top: 5px;
+  font-size: clamp(16px, 2vw, 21px);
+  font-weight: 650;
+  letter-spacing: -.03em;
+}
+
+.superadmin-columns,
+.superadmin-admin-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.superadmin-panel {
+  overflow: hidden;
+  padding: 18px;
+}
+
+.superadmin-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.superadmin-panel-heading h2 {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -.02em;
+}
+
+.superadmin-text-button {
+  padding: 6px 3px;
+  border: 0;
+  color: #a63c30;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  font: 600 10px "DM Sans", sans-serif;
+}
+
+.superadmin-admin-actions {
+  display: grid;
+  justify-items: start;
+  gap: 5px;
+}
+
+.superadmin-password-reset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 9px;
+  margin-top: 15px;
+  padding: 13px;
+  border: 1px solid #e4dfd6;
+  border-radius: 6px;
+  background: #f8f6f1;
+}
+
+.superadmin-password-reset strong {
+  grid-column: 1 / -1;
+  color: #514d46;
+  font-size: 10px;
+}
+
+.superadmin-password-reset input {
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 9px;
+  border: 1px solid #ded9cf;
+  border-radius: 5px;
+  font: 10px "DM Sans", sans-serif;
+}
+
+.superadmin-password-reset .superadmin-primary {
+  min-height: 36px;
+  font-size: 9px;
+}
+
+.superadmin-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.superadmin-activity-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.superadmin-activity-filter input {
+  flex: 1 1 190px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #ded9cf;
+  border-radius: 5px;
+  color: #24221f;
+  background: white;
+  font: 10px "DM Sans", sans-serif;
+}
+
+.superadmin-activity-filter button {
+  padding: 0 13px;
+  border: 0;
+  border-radius: 5px;
+  color: white;
+  background: #24221f;
+  cursor: pointer;
+  font: 600 10px "DM Sans", sans-serif;
+}
+
+.superadmin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 13px;
+  color: #817c74;
+  font-size: 9px;
+}
+
+.superadmin-pagination > div {
+  display: flex;
+  gap: 6px;
+}
+
+.superadmin-pagination button {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  border: 1px solid #ded9cf;
+  border-radius: 5px;
+  color: #4a453e;
+  background: #fff;
+  cursor: pointer;
+}
+
+.superadmin-pagination button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.superadmin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 10px;
+}
+
+.superadmin-table th {
+  padding: 10px 9px;
+  color: #817c74;
+  background: #f6f3ed;
+  font-size: 8px;
+  font-weight: 650;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.superadmin-table td {
+  padding: 11px 9px;
+  border-bottom: 1px solid #eeeae3;
+  vertical-align: middle;
+}
+
+.superadmin-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.superadmin-table td strong,
+.superadmin-table td small {
+  display: block;
+}
+
+.superadmin-table td strong {
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.superadmin-table td small {
+  margin-top: 4px;
+  color: #817c74;
+  font-size: 9px;
+}
+
+.superadmin-status {
+  display: inline-flex;
+  padding: 4px 7px;
+  border-radius: 99px;
+  color: #615a50;
+  background: #efede8;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.superadmin-status.is-active {
+  color: #26734b;
+  background: #e8f4ec;
+}
+
+.superadmin-status.is-disabled {
+  color: #9c3932;
+  background: #f8e9e7;
+}
+
+.superadmin-status.is-pending {
+  color: #90611b;
+  background: #fbf1db;
+}
+
+.superadmin-create-form {
+  display: grid;
+  gap: 13px;
+}
+
+.superadmin-create-form .superadmin-panel-heading {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.superadmin-create-form label,
+.superadmin-login-card label {
+  display: grid;
+  gap: 6px;
+  color: #514d46;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.superadmin-create-form input,
+.superadmin-login-card input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid #ded9cf;
+  border-radius: 5px;
+  outline: 0;
+  color: #24221f;
+  background: white;
+  font: 12px "DM Sans", sans-serif;
+}
+
+.superadmin-create-form input:focus,
+.superadmin-login-card input:focus {
+  border-color: #b73b2d;
+  box-shadow: 0 0 0 3px #b73b2d18;
+}
+
+.superadmin-primary {
+  min-height: 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 5px;
+  color: white;
+  background: #24221f;
+  cursor: pointer;
+  font: 600 11px "DM Sans", sans-serif;
+}
+
+.superadmin-primary:hover:not(:disabled) {
+  background: #a63c30;
+}
+
+.superadmin-primary:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.superadmin-privacy-note {
+  margin: 15px 2px;
+  color: #817c74;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.superadmin-alert {
+  margin: 0 0 13px;
+  padding: 11px 13px;
+  border: 1px solid #efc7c1;
+  border-radius: 5px;
+  color: #942f26;
+  background: #fff2ef;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.superadmin-loading,
+.superadmin-section-loading {
+  min-height: 55vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #817c74;
+  font: 12px "DM Sans", sans-serif;
+}
+
+.superadmin-section-loading {
+  min-height: 180px;
+}
+
+.superadmin-spin {
+  animation: superadmin-spin 1s linear infinite;
+}
+
+@keyframes superadmin-spin {
+  to { transform: rotate(360deg); }
+}
+
+.superadmin-login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 68px 18px 30px;
+  color: #24221f;
+  background: #f5f2eb;
+  font-family: "DM Sans", sans-serif;
+}
+
+.superadmin-login-back {
+  position: absolute;
+  top: 24px;
+  left: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #655f57;
+  font-size: 11px;
+}
+
+.superadmin-login-card {
+  width: min(100%, 430px);
+  display: grid;
+  gap: 15px;
+  padding: clamp(25px, 6vw, 42px);
+  border: 1px solid #e4dfd6;
+  border-radius: 10px;
+  background: #fffdfa;
+  box-shadow: 0 18px 65px #241f1514;
+}
+
+.superadmin-login-mark {
+  width: 48px;
+  height: 48px;
+}
+
+.superadmin-login-kicker {
+  margin-top: 5px;
+  color: #a63c30;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .13em;
+}
+
+.superadmin-login-card h1 {
+  margin: 0;
+  font: 500 42px/.98 "Playfair Display", Georgia, serif;
+  letter-spacing: -.045em;
+}
+
+.superadmin-login-card h1 em {
+  color: #a63c30;
+  font-weight: 500;
+}
+
+.superadmin-login-card > p {
+  margin: -4px 0 5px;
+  color: #817c74;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.superadmin-login-note {
+  color: #817c74;
+  font-size: 9px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .superadmin-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .superadmin-columns,
+  .superadmin-admin-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .superadmin-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .superadmin-sidebar {
+    position: sticky;
+    z-index: 20;
+    top: 0;
+    height: auto;
+    padding: 10px 12px;
+  }
+
+  .superadmin-brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 2px 10px;
+    font-size: 12px;
+  }
+
+  .superadmin-brand span {
+    font-size: 8px;
+  }
+
+  .superadmin-safety,
+  .superadmin-account {
+    display: none;
+  }
+
+  .superadmin-navigation {
+    display: flex;
+    overflow-x: auto;
+    gap: 4px;
+  }
+
+  .superadmin-navigation button {
+    min-width: max-content;
+    min-height: 36px;
+    gap: 7px;
+    padding: 0 8px;
+    font-size: 9px;
+  }
+
+  .superadmin-navigation button svg {
+    width: 15px;
+  }
+
+  .superadmin-main {
+    padding: 19px 13px 28px;
+  }
+
+  .superadmin-topbar {
+    display: grid;
+    margin-bottom: 16px;
+  }
+
+  .superadmin-topbar h1 {
+    font-size: 32px;
+  }
+
+  .superadmin-top-actions {
+    justify-content: start;
+  }
+
+  .superadmin-metrics {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .superadmin-metric {
+    min-height: 91px;
+    padding: 11px;
+  }
+
+  .superadmin-metric-label {
+    font-size: 9px;
+  }
+
+  .superadmin-metric strong {
+    font-size: 16px;
+  }
+
+  .superadmin-panel {
+    padding: 13px;
+  }
+
+  .superadmin-table {
+    min-width: 570px;
+  }
+}
