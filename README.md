@@ -162,6 +162,22 @@ sudo certbot renew --dry-run
 
 La configuration HTTPS conserve le chemin HTTP-01 pour renouveler le certificat. N’activer le déploiement que lorsque `sudo nginx -t` et le test de renouvellement réussissent.
 
+Le vhost HTTPS envoie aussi l’en-tête HSTS (`max-age=31536000`) pour que les navigateurs ayant visité le site en HTTPS y reviennent toujours en HTTPS pendant un an. `includeSubDomains` et `preload` ne sont pas activés : ne les ajouter qu’après avoir vérifié que tous les sous-domaines concernés utilisent HTTPS. Sur un VPS déjà configuré, ajouter cette ligne dans le bloc `server` qui écoute sur le port 443 de `/etc/nginx/sites-available/fatoushop.conf`, sans remplacer les autres réglages :
+
+```nginx
+add_header Strict-Transport-Security "max-age=31536000" always;
+```
+
+Dans `/etc/nginx/snippets/fatoushop-locations.conf`, ajouter également cette directive aux emplacements `/service-worker.js`, `/manifest.webmanifest`, `/index.html` et `/assets/` qui ont déjà leur propre `add_header` ; Nginx ne leur transmet pas automatiquement les en-têtes définis au niveau `server`. Ne remplacez pas ce snippet, car il peut contenir un chemin PHP-FPM ajusté pour ce VPS.
+
+Puis valider et recharger Nginx, et vérifier que l’en-tête est bien servi :
+
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+curl -sSI https://fatoushop.multibrain.cloud/ | grep -i strict-transport-security
+curl -sSI https://fatoushop.multibrain.cloud/api/storefront | grep -i strict-transport-security
+```
+
 ### 4. Autoriser les déploiements GitHub
 
 Sur votre ordinateur Windows, créer une clé dédiée à GitHub Actions et copier la clé publique sur le compte `deploy` du VPS. Ne partagez jamais la clé privée :
